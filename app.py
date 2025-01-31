@@ -37,9 +37,7 @@ def split_into_chunks(pages):
 main_placeholder = st.empty()
 
 if process_url_clicked:
-    st.text("It is advisable to save embeddings in your system as it can be very large")
-    embedding_location = st.text_input("Where would you love to save your embeddings")
-
+    
     main_placeholder.text("Data Loading... , Started...✅✅✅.")
     url = (
         "https://www.covenantuniversity.edu.ng/downloads/Student-handbook-Feb-2020.pdf"
