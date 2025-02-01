@@ -10,7 +10,6 @@ from langchain.chains import RetrievalQAWithSourcesChain
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain_groq import ChatGroq
-
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -70,24 +69,24 @@ if query:
     if os.path.exists(file_name):
         with open(file_name, "rb") as f:
             data_embedding = pickle.load(f)
+        time.sleep(2)
+        progress_placeholder.text("Searching Source data.....")
+        chain = RetrievalQAWithSourcesChain.from_llm(
+            llm=model, retriever=data_embedding.as_retriever()
+        )
+        progress_placeholder.text("Thinking .....")
+        result = chain.invoke({"question": query}, return_only_output=True)
+        progress_placeholder.text("DONE.....")
+        st.write("Answer:")
+        st.subheader(result["answer"])
+
+        sources = result.get("sources", "")
+        if sources:
+            st.subheader("Sources:")
+            source_list = sources.split("\n")
+            for source in source_list:
+                st.write(source)
+                st.write(source)
+
     else:
         progress_placeholder.text("File not available, Please Process handbooks")
-
-    time.sleep(2)
-    progress_placeholder.text("TSearching Source data.....")
-    chain = RetrievalQAWithSourcesChain.from_llm(
-        llm=model, retriever=data_embedding.as_retriever()
-    )
-    progress_placeholder.text("Thinking .....")
-    result = chain.invoke({"question": query}, return_only_output=True)
-    progress_placeholder.text("DONE.....")
-    st.write("Answer:")
-    st.subheader(result["answer"])
-
-    sources = result.get("sources", "")
-    if sources:
-        st.subheader("Sources:")
-        source_list = sources.split("\n")
-        for source in source_list:
-            st.write(source)
-            st.write(source)
