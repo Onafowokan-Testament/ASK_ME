@@ -1,13 +1,16 @@
 from dotenv import load_dotenv
 
 load_dotenv()
-import pickle
 import os
+import pickle
+import time
+
 import streamlit as st
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain_groq import ChatGroq
+
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -23,7 +26,6 @@ st.sidebar.title("Chat with me")
 process_url_clicked = st.sidebar.button("Process Handbook")
 
 
-
 def split_into_chunks(pages):
     splitter = RecursiveCharacterTextSplitter(
         separators=["\n\n", "\n", "."], chunk_size=1000, chunk_overlap=400
@@ -35,9 +37,10 @@ def split_into_chunks(pages):
 
 
 main_placeholder = st.empty()
+progress_placeholder = st.empty()
 
 if process_url_clicked:
-    
+
     main_placeholder.text("Data Loading... , Started...✅✅✅.")
     url = (
         "https://www.covenantuniversity.edu.ng/downloads/Student-handbook-Feb-2020.pdf"
@@ -61,21 +64,22 @@ if process_url_clicked:
         main_placeholder.text("DONE...✅")
 
 
-
 query = main_placeholder.text_input("Question :")
 if query:
+    progress_placeholder.text("Loading Embedding .....")
     if os.path.exists(file_name):
         with open(file_name, "rb") as f:
             data_embedding = pickle.load(f)
+        time.sleep(2)
+        progress_placeholder.text("TSearching Source data.....")
         chain = RetrievalQAWithSourcesChain.from_llm(
             llm=model, retriever=data_embedding.as_retriever()
         )
-       
-
-        result = chain.invoke({"question": query}, return_only_output =True)
+        progress_placeholder.text("Thinking .....")
+        result = chain.invoke({"question": query}, return_only_output=True)
+        progress_placeholder.text("DONE.....")
         st.write("Answer:")
-        st.subheader(result['answer'])
-
+        st.subheader(result["answer"])
 
         sources = result.get("sources", "")
         if sources:
@@ -83,4 +87,4 @@ if query:
             source_list = sources.split("\n")
             for source in source_list:
                 st.write(source)
-    
+                st.write(source)
