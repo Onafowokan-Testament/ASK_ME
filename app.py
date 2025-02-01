@@ -71,7 +71,7 @@ if query:
         with open(file_name, "rb") as f:
             data_embedding = pickle.load(f)
         time.sleep(2)
-        progress_placeholder.text("TSearching Source data.....")
+        progress_placeholder.text("Searching Source data.....")
         chain = RetrievalQAWithSourcesChain.from_llm(
             llm=model, retriever=data_embedding.as_retriever()
         )
