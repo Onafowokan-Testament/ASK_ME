@@ -41,6 +41,7 @@ if process_url_clicked:
 
     if os.path.exists(file_name):
         main_placeholder.text("Embedding already in memory. Ask your questions🧐")
+        st.text("Embedding already in memory")
     else:
         main_placeholder.text("Data Loading... , Started...✅✅✅.")
         url = (
