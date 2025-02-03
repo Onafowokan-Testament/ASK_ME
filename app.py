@@ -21,6 +21,7 @@ file_name = "vector_index.pkl"
 st.title("Covenant University Student Book Chatbot")
 st.sidebar.title("Chat with me")
 
+
 process_url_clicked = st.sidebar.button("Process Handbook")
 
 
@@ -44,14 +45,14 @@ if process_url_clicked:
         st.text("Embedding already in memory")
     else:
         main_placeholder.text("Data Loading... , Started...✅✅✅.")
-        url = (
-            "https://www.covenantuniversity.edu.ng/downloads/Student-handbook-Feb-2020.pdf"
-        )
+        url = "https://www.covenantuniversity.edu.ng/downloads/Student-handbook-Feb-2020.pdf"
 
         loader = PyPDFLoader(url)
         pages = loader.load_and_split()
 
-        main_placeholder.text("Text Splitting... , Started...✅✅✅.. Please be Patient")
+        main_placeholder.text(
+            "Text Splitting... , Started...✅✅✅.. Please be Patient"
+        )
         docs = split_into_chunks(pages)
 
         data_embedding = FAISS.from_documents(docs, embeddings)
