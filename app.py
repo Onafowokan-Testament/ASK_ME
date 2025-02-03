@@ -21,8 +21,8 @@ file_name = "vector_index.pkl"
 st.title("Covenant University Student Book Chatbot")
 st.sidebar.title("Chat with me")
 
-
-process_url_clicked = st.sidebar.button("Process Handbook")
+if not os.path.exists(file_name):
+    process_url_clicked = st.sidebar.button("Process Handbook")
 
 
 def split_into_chunks(pages):
